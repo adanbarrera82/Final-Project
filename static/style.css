@@ -28,7 +28,8 @@ body {
 /* Container with modern dark effect */
 .container {
     background: rgba(31, 41, 55, 0.95);
-    backdrop-filter: blur(10px);
+    /* removed backdrop-filter: blur(10px); because it creates a stacking context
+       that can cause fixed-position modals to be rendered behind the page overlay */
     border-radius: 16px;
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -355,3 +356,37 @@ h1 {
         font-size: 0.9rem;
     }
 }
+
+/* Ensure modal sits above other UI elements and is clickable */
+.container {
+    /* keep default positioning so modals (fixed) can sit above the page
+       Avoid creating a stacking context here (no position or z-index) */
+    position: static;
+    z-index: auto;
+}
+
+/* Give modal and backdrop separate z-index values so the backdrop stays behind the modal */
+.modal-backdrop {
+    z-index: 199990 !important; /* backdrop behind modal */
+    opacity: 0.5 !important;
+}
+
+.modal {
+    z-index: 200000 !important; /* modal above backdrop */
+}
+
+/* Make sure modal content accepts pointer events */
+.modal,
+.modal-dialog,
+.modal-content {
+    pointer-events: auto !important;
+    outline: none !important;
+}
+
+/* Force fully visible modal when shown (avoid accidental opacity reductions) */
+.modal.show {
+    opacity: 1 !important;
+}
+
+/* If a custom full-page overlay accidentally exists, ensure it doesn't block modals */
+/* Removed unused .app-overlay rule to avoid accidental overlay blocking */
