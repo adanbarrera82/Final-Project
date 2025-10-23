@@ -1,19 +1,19 @@
 /* Modern Color Scheme */
 :root {
-    --primary-color: #2563eb;
-    --secondary-color: #16a34a;
-    --danger-color: #dc2626;
-    --warning-color: #ca8a04;
+    --primary-color: #3b82f6;
+    --secondary-color: #22c55e;
+    --danger-color: #ef4444;
+    --warning-color: #eab308;
     --background-color: #111827;
     --card-background: #1f2937;
-    --text-primary: #f3f4f6;
-    --text-secondary: #9ca3af;
-    --accent-color: #3b82f6;
+    --text-primary: #ffffff;
+    --text-secondary: #d1d5db;
+    --accent-color: #60a5fa;
     --gradient-start: #000000;
     --gradient-end: #1f2937;
-    --border-color: #374151;
+    --border-color: #4b5563;
     --input-background: #374151;
-    --hover-color: #2563eb;
+    --hover-color: #60a5fa;
 }
 
 /* General Styles */
@@ -132,6 +132,14 @@ h1 {
     letter-spacing: 0.025em;
 }
 
+.card-text {
+    color: var(--text-primary);
+}
+
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
 /* Button Styles */
 .btn {
     border-radius: 8px;
@@ -186,19 +194,87 @@ h1 {
 }
 
 /* Form Styles */
-.form-control {
-    background-color: var(--input-background);
+
+/* Form Inputs - ensure high contrast when typing */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select,
+input.form-control,
+textarea.form-control,
+select.form-control,
+.modal input,
+.modal textarea,
+.modal select {
+    background-color: var(--input-background) !important;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     padding: 0.75rem;
     transition: all 0.2s ease;
-    color: var(--text-primary);
+    color: var(--text-primary) !important; /* force light text */
+    caret-color: var(--text-primary) !important; /* white caret */
 }
 
-.form-control:focus {
+/* Override autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--text-primary) !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--input-background) inset !important;
+    box-shadow: 0 0 0 1000px var(--input-background) inset !important;
+    transition: background-color 0s !important;
+    animation-name: autofillFix;
+    animation-fill-mode: both;
+    animation-duration: 0s;
+    background: var(--input-background) !important;
+}
+
+@keyframes autofillFix {
+    to {
+        color: var(--text-primary);
+        background: var(--input-background);
+    }
+}
+
+.form-control:focus, .form-control:active, .form-control:valid,
+input[type="text"]:focus, input[type="text"]:active, input[type="text"]:valid,
+input[type="email"]:focus, input[type="email"]:active, input[type="email"]:valid,
+input[type="password"]:focus, input[type="password"]:active, input[type="password"]:valid,
+input[type="search"]:focus, input[type="search"]:active, input[type="search"]:valid,
+textarea:focus, textarea:active, textarea:valid,
+select:focus, select:active, select:valid {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
-    background-color: rgba(55, 65, 81, 0.9);
+    background-color: var(--input-background) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Placeholder styling: slightly dimmer but readable */
+.form-control::placeholder,
+input::placeholder,
+textarea::placeholder {
+    color: rgba(243, 244, 246, 0.6) !important; /* semi-transparent light */
+}
+
+/* Ensure inputs inside modals follow same rules */
+.modal .form-control,
+.modal input,
+.modal textarea,
+.modal select {
+    color: var(--text-primary) !important;
+    background-color: rgba(55,65,81,0.9) !important;
 }
 
 .form-label {
@@ -305,11 +381,13 @@ h1 {
 
 /* Member List Styles */
 .member-list {
-    background-color: rgba(59, 130, 246, 0.1);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.1));
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 20px;
     margin-top: 1rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    backdrop-filter: blur(4px);
+    color: var(--accent-color);
 }
 
 /* Group Creator Badge */
