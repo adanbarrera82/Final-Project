@@ -9,8 +9,21 @@
 </head>
 <body class="bg-light">
 
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">StudyBuddy</a>
+      <div class="d-flex align-items-center">
+        <span class="navbar-text text-white me-3">
+          Welcome, {{ session['username'] }}!
+        </span>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+      </div>
+    </div>
+  </nav>
+
   <div class="container py-5">
-    <h1 class="text-center mb-4">📚 StudyBuddy</h1>
+    <h1 class="text-center mb-4">StudyBuddy</h1>
     
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -27,6 +40,23 @@
     <div class="text-center mb-4">
       <a href="{{ url_for('add_group') }}" class="btn btn-primary">➕ Add New Study Group</a>
     </div>
+
+    <!-- Subject Filter -->
+    {% if subjects %}
+      <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+          <form method="GET" action="{{ url_for('index') }}" class="d-flex align-items-center gap-2">
+            <label for="subjectFilter" class="form-label mb-0 text-nowrap">Filter by Subject:</label>
+            <select name="subject" id="subjectFilter" class="form-select" onchange="this.form.submit()">
+              <option value="All" {% if not selected_subject or selected_subject == 'All' %}selected{% endif %}>All Subjects</option>
+              {% for subject in subjects %}
+                <option value="{{ subject }}" {% if selected_subject == subject %}selected{% endif %}>{{ subject }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </div>
+      </div>
+    {% endif %}
 
     {% if groups %}
       <div class="row justify-content-center">
@@ -58,6 +88,9 @@
                 <!-- Leave button  -->
                 <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#leaveModal{{ group.id }}">Leave</button>
 
+                <!-- Chat button -->
+                <a href="{{ url_for('chat', id=group.id) }}" class="btn btn-sm btn-primary">💬 Chat</a>
+
                 <a href="{{ url_for('edit_group', id=group.id) }}" class="btn btn-sm btn-outline-secondary">✏️ Edit</a>
                 <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ group.id }}">🗑️ Delete</button>
               </div>
@@ -74,9 +107,8 @@
                 </div>
                 <form method="POST" action="{{ url_for('delete_group', id=group.id) }}">
                   <div class="modal-body">
-                    <p class="text-danger">Only the group creator ({{ group.creator }}) can delete this group.</p>
-                    <label for="deleteUsername{{ group.id }}" class="form-label">Enter your name to confirm:</label>
-                    <input type="text" name="username" id="deleteUsername{{ group.id }}" class="form-control" required>
+                    <p class="text-danger">Are you sure you want to delete "{{ group.group_name }}"?</p>
+                    <p class="text-muted">Only the group creator can delete this group.</p>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -97,8 +129,7 @@
                 </div>
                 <form method="POST" action="{{ url_for('join_group', id=group.id) }}">
                   <div class="modal-body">
-                    <label for="joinUsername{{ group.id }}" class="form-label">Enter your name:</label>
-                    <input type="text" name="username" id="joinUsername{{ group.id }}" class="form-control" placeholder="e.g., Adan" required>
+                    <p>Do you want to join "{{ group.group_name }}"?</p>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -119,8 +150,7 @@
                 </div>
                 <form method="POST" action="{{ url_for('leave_group', id=group.id) }}">
                   <div class="modal-body">
-                    <label for="leaveUsername{{ group.id }}" class="form-label">Enter your name:</label>
-                    <input type="text" name="username" id="leaveUsername{{ group.id }}" class="form-control" placeholder="e.g., Adan" required>
+                    <p>Are you sure you want to leave "{{ group.group_name }}"?</p>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

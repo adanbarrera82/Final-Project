@@ -21,7 +21,41 @@
 
       <div class="mb-3">
         <label for="subject" class="form-label">Subject</label>
-        <input type="text" class="form-control" name="subject" id="subject" value="{{ group.subject }}" required>
+        <select class="form-control" name="subject" id="subject" required onchange="toggleCustomSubject()">
+          <option value="">Select a subject</option>
+          <option value="Computer Science" {% if group.subject == 'Computer Science' %}selected{% endif %}>Computer Science</option>
+          <option value="Mathematics" {% if group.subject == 'Mathematics' %}selected{% endif %}>Mathematics</option>
+          <option value="Physics" {% if group.subject == 'Physics' %}selected{% endif %}>Physics</option>
+          <option value="Chemistry" {% if group.subject == 'Chemistry' %}selected{% endif %}>Chemistry</option>
+          <option value="Biology" {% if group.subject == 'Biology' %}selected{% endif %}>Biology</option>
+          <option value="Engineering" {% if group.subject == 'Engineering' %}selected{% endif %}>Engineering</option>
+          <option value="Business" {% if group.subject == 'Business' %}selected{% endif %}>Business</option>
+          <option value="Economics" {% if group.subject == 'Economics' %}selected{% endif %}>Economics</option>
+          <option value="Psychology" {% if group.subject == 'Psychology' %}selected{% endif %}>Psychology</option>
+          <option value="English" {% if group.subject == 'English' %}selected{% endif %}>English</option>
+          <option value="History" {% if group.subject == 'History' %}selected{% endif %}>History</option>
+          <option value="Political Science" {% if group.subject == 'Political Science' %}selected{% endif %}>Political Science</option>
+          <option value="Statistics" {% if group.subject == 'Statistics' %}selected{% endif %}>Statistics</option>
+          <option value="Art" {% if group.subject == 'Art' %}selected{% endif %}>Art</option>
+          <option value="Music" {% if group.subject == 'Music' %}selected{% endif %}>Music</option>
+          <option value="Other" {% if group.subject not in ['Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Biology', 'Engineering', 'Business', 'Economics', 'Psychology', 'English', 'History', 'Political Science', 'Statistics', 'Art', 'Music'] %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+
+      <div class="mb-3" id="customSubjectDiv" style="display: {% if group.subject not in ['Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Biology', 'Engineering', 'Business', 'Economics', 'Psychology', 'English', 'History', 'Political Science', 'Statistics', 'Art', 'Music'] %}block{% else %}none{% endif %};">
+        <label for="custom_subject" class="form-label">Enter Custom Subject</label>
+        <input type="text" class="form-control" name="custom_subject" id="custom_subject" value="{% if group.subject not in ['Computer Science', 'Mathematics', 'Physics', 'Chemistry', 'Biology', 'Engineering', 'Business', 'Economics', 'Psychology', 'English', 'History', 'Political Science', 'Statistics', 'Art', 'Music'] %}{{ group.subject }}{% endif %}">
+      </div>
+
+      <div class="mb-3">
+        <label for="course_number" class="form-label">Course Number (Optional)</label>
+        <input type="text" class="form-control" name="course_number" id="course_number" value="{{ group.course_number if group.course_number else '' }}" placeholder="e.g., CS 101, MATH 250">
+      </div>
+
+      <div class="mb-3">
+        <label for="expiration_date" class="form-label">Expiration Date (Optional)</label>
+        <input type="datetime-local" class="form-control" name="expiration_date" id="expiration_date" value="{% if group.expiration_date %}{{ group.expiration_date.strftime('%Y-%m-%dT%H:%M') }}{% endif %}">
+        <small class="form-text text-muted">Group will be automatically deleted after this date.</small>
       </div>
 
       <div class="mb-3">
@@ -36,6 +70,23 @@
       <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">⬅ Back to Home</a>
     </div>
   </div>
+
+  <script>
+    function toggleCustomSubject() {
+      const subjectSelect = document.getElementById('subject');
+      const customSubjectDiv = document.getElementById('customSubjectDiv');
+      const customSubjectInput = document.getElementById('custom_subject');
+
+      if (subjectSelect.value === 'Other') {
+        customSubjectDiv.style.display = 'block';
+        customSubjectInput.required = true;
+      } else {
+        customSubjectDiv.style.display = 'none';
+        customSubjectInput.required = false;
+        customSubjectInput.value = '';
+      }
+    }
+  </script>
 
 </body>
 </html>
