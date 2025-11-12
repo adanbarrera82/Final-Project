@@ -226,6 +226,12 @@ def add_group():
 @login_required
 def edit_group(id):
     group = StudyGroup.query.get_or_404(id)
+    current_user = session.get('username')
+
+    # Only the group creator can edit the group
+    if current_user != group.creator:
+        flash('Only the group creator can edit this group!', 'danger')
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
         group.group_name = request.form['group_name']
