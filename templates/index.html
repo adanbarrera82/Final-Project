@@ -67,16 +67,16 @@
                 <h5 class="card-title d-flex align-items-center justify-content-between">
                   <span>{{ group.group_name }}</span>
                   <span class="badge bg-info text-dark">
-                    👥 {{ group.get_members()|length }} Member{% if group.get_members()|length != 1 %}s{% endif %}
+                    👥 {{ group.members|length }} Member{% if group.members|length != 1 %}s{% endif %}
                   </span>
                 </h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{ group.subject }}</h6>
                 <p class="card-text">{{ group.description }}</p>
                 <span class="creator-badge">👤 Created by {{ group.creator }}</span>
 
-                {% if group.get_members() %}
+                {% if group.members %}
                   <div class="member-list">
-                    <strong>👥 Members:</strong> {{ ", ".join(group.get_members()) }}
+                    <strong>👥 Members:</strong> {{ ", ".join(group.members) }}
                   </div>
                 {% else %}
                   <p class="text-muted">No members yet.</p>
