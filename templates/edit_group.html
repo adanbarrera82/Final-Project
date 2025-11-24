@@ -63,6 +63,12 @@
         <textarea class="form-control" name="description" id="description" rows="3" required>{{ group.description }}</textarea>
       </div>
 
+      <div class="mb-3">
+        <label for="video_link" class="form-label">Video Chat Link (Optional)</label>
+        <input type="url" class="form-control" name="video_link" id="video_link" value="{{ group.video_link if group.video_link else '' }}" placeholder="https://zoom.us/j/... or https://meet.google.com/...">
+        <small class="form-text text-muted">Add a Zoom, Google Meet, or other video call link for virtual study sessions.</small>
+      </div>
+
       <button type="submit" class="btn btn-success w-100">Save Changes</button>
     </form>
 

@@ -52,7 +52,17 @@
   <div class="container py-5">
     <div class="chat-container">
       <h2 class="text-center mb-1">💬 Group Chat</h2>
-      <h4 class="text-center text-muted mb-4">{{ group.group_name }} - {{ group.subject }}</h4>
+      <h4 class="text-center text-muted mb-2">{{ group.group_name }} - {{ group.subject }}</h4>
+
+      <!-- Video Meeting Link -->
+      {% if group.video_link %}
+        <div class="alert alert-info text-center mb-3">
+          <strong>🎥 Video Meeting:</strong>
+          <a href="{{ group.video_link }}" target="_blank" class="alert-link">{{ group.video_link }}</a>
+          <br>
+          <small class="text-muted">Click to join the virtual study session</small>
+        </div>
+      {% endif %}
 
       <!-- Flash Messages -->
       {% with messages = get_flashed_messages(with_categories=true) %}
@@ -72,7 +82,22 @@
           {% for msg in messages %}
             <div class="message">
               <div class="message-sender">{{ msg.sender_name }}</div>
-              <div class="message-text">{{ msg.message_text }}</div>
+              {% if msg.message_text %}
+                <div class="message-text">{{ msg.message_text }}</div>
+              {% endif %}
+              {% if msg.file_url %}
+                <div class="message-attachment mt-2">
+                  {% if msg.file_type and msg.file_type.startswith('image/') %}
+                    <a href="{{ msg.file_url }}" target="_blank">
+                      <img src="{{ msg.file_url }}" alt="Uploaded image" style="max-width: 100%; max-height: 300px; border-radius: 8px; cursor: pointer;">
+                    </a>
+                  {% else %}
+                    <a href="{{ msg.file_url }}" target="_blank" class="btn btn-sm btn-outline-light">
+                      📎 {{ msg.file_name }}
+                    </a>
+                  {% endif %}
+                </div>
+              {% endif %}
               <div class="message-time">{{ msg.timestamp.strftime('%b %d, %Y at %I:%M %p') }}</div>
             </div>
           {% endfor %}
@@ -84,11 +109,17 @@
       </div>
 
       <!-- Message Form -->
-      <form method="POST" class="card shadow p-4">
+      <form method="POST" enctype="multipart/form-data" class="card shadow p-4">
         <div class="mb-3">
           <label for="message" class="form-label">Message</label>
-          <textarea class="form-control" name="message" id="message" rows="3" placeholder="Type your message..." required autofocus></textarea>
+          <textarea class="form-control" name="message" id="message" rows="3" placeholder="Type your message..."></textarea>
           <small class="form-text text-muted">Posting as: {{ current_user }}</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="file" class="form-label">Attach File or Image (optional)</label>
+          <input type="file" class="form-control" name="file" id="file" accept="image/*,.pdf,.doc,.docx,.txt">
+          <small class="form-text text-muted">Max 10MB. Supports images, PDF, Word, and text files.</small>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">Send Message</button>
@@ -96,6 +127,11 @@
 
       <div class="text-center mt-3">
         <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">⬅ Back to Groups</a>
+        <a href="{{ url_for('tasks', id=group.id) }}" class="btn btn-info ms-2">📋 Tasks</a>
+        {% if group.video_link %}
+          <a href="{{ group.video_link }}" target="_blank" class="btn btn-primary ms-2">🎥 Join Video Call</a>
+        {% endif %}
+        <a href="https://www.utrgv.edu/library/services/reserve-study-room/index.htm" target="_blank" class="btn btn-success ms-2">📚 Reserve Study Room</a>
       </div>
     </div>
   </div>
